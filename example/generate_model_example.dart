@@ -14,7 +14,7 @@ String _scriptPath() {
 }
 
 main() {
-  final classGenerator = new ModelGenerator('Sample');
+  final classGenerator = new ModelGenerator('ConverJson2DartModel');
   final currentDirectory = dirname(_scriptPath());
   final filePath = normalize(join(currentDirectory, 'sample.json'));
   final jsonRawData = new File(filePath).readAsStringSync();

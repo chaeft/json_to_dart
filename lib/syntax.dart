@@ -5,6 +5,9 @@ const String emptyListWarn = "list is empty";
 const String ambiguousListWarn = "list is ambiguous";
 const String ambiguousTypeWarn = "type is ambiguous";
 
+var reqRootClassName = "";
+var ignoreSubTypes = ['String', 'int', 'double', 'bool', 'Null', 'List'];
+
 class Warning {
   final String warning;
   final String path;
@@ -92,7 +95,7 @@ class TypeDefinition {
 
   String _buildParseClass(String expression) {
     final properType = subtype != null ? subtype : name;
-    return 'new $properType.fromJson($expression)';
+    return 'new ${reqRootClassName}${properType}.fromJson($expression)';
   }
 
   String _buildToJsonClass(String expression) {
@@ -114,7 +117,7 @@ class TypeDefinition {
       return "$fieldKey = DateTime.tryParse(json['$key']);";
     } else if (name == 'List') {
       // list of class
-      return "if (json['$key'] != null) {\n\t\t\t$fieldKey = new List<$subtype>();\n\t\t\tjson['$key'].forEach((v) { $fieldKey.add(new $subtype.fromJson(v)); });\n\t\t}";
+      return "if (json['$key'] != null) {\n\t\t\t$fieldKey = new List<${reqRootClassName}${subtype}>();\n\t\t\tjson['$key'].forEach((v) { $fieldKey.add(new ${reqRootClassName}${subtype}.fromJson(v)); });\n\t\t}";
     } else {
       // class
       return "$fieldKey = json['$key'] != null ? ${_buildParseClass(jsonKey)} : null;";
@@ -147,7 +150,7 @@ class Dependency {
 
   Dependency(this.name, this.typeDef);
 
-  String get className => camelCase(name);
+  String get className => reqRootClassName + camelCase(name);
 }
 
 class ClassDefinition {
@@ -208,21 +211,42 @@ class ClassDefinition {
   }
 
   void _addTypeDef(TypeDefinition typeDef, StringBuffer sb) {
-    sb.write('${typeDef.name}');
+    //print('typename --- ${typeDef.name} ${typeDef.subtype}');
+    if (ignoreSubTypes.indexOf(typeDef.name) > -1 ) {
+      if (typeDef.name == "int" || typeDef.name == "double") {
+        sb.write('num');
+      } else {
+        sb.write('${typeDef.name}');
+      }
+    } else {
+      sb.write('${reqRootClassName}${typeDef.name}');
+    }
+    
+    
     if (typeDef.subtype != null) {
-      sb.write('<${typeDef.subtype}>');
+      if (ignoreSubTypes.indexOf(typeDef.subtype) > -1 ) {
+        if (typeDef.subtype == "int" || typeDef.subtype == "double") {
+          sb.write('<num>');
+        } else {
+          sb.write('<${typeDef.subtype}>');
+        }
+        
+      } else {
+        sb.write('<${reqRootClassName}${typeDef.subtype}>');
+      }
+      
     }
   }
 
   String get _fieldList {
     return fields.keys.map((key) {
       final f = fields[key];
-      final fieldName =
-          fixFieldName(key, typeDef: f, privateField: privateFields);
+      final fieldName = fixFieldName(key, typeDef: f, privateField: privateFields);
       final sb = new StringBuffer();
       sb.write('\t');
+      //print('################# key ${key} type ${f}');
       _addTypeDef(f, sb);
-      sb.write(' $fieldName;');
+      sb.write(' ${fieldName};');
       return sb.toString();
     }).join('\n');
   }

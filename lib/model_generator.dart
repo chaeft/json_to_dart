@@ -32,6 +32,7 @@ class ModelGenerator {
     } else {
       this.hints = new List<Hint>();
     }
+    reqRootClassName = this._rootClassName;
   }
 
   Hint _hintForPath(String path) {
