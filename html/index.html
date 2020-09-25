@@ -10,17 +10,19 @@
                 position: relative;
                 width: 100%;
                 display: block;
+                margin-left: 20px;
+                margin-top: 20px;
             }
 
             #editorContainer .wrap {
-                width: 400px;
+                width: 500px;
                 height: 500px;
                 float: left;
                 padding-right: 20px;
             }
 
             #editorContainer .big-wrap {
-                width: 800px;
+                width: 1100px;
                 height: 800px;
                 float: left;
                 padding-right: 20px;
@@ -46,16 +48,17 @@
             <div id="editorContainer">
                 <div class="wrap">
                     <div id="editor1" class="editor"></div>
+
+                    <div id="actContainer">
+                        <input type="text" name="className" id="rootClassName" placeholder="class name" />
+                        <input type="button" class="btn btn-success" name="submit" value="변경" id="convert"/>
+                        <input type="button" class="btn btn-primary" name="copy" value="copy clipboard" id="copy"/>
+                    </div>
                 </div>
 
                 <div class="wrap big-wrap">
                     <div id="editor2" class="editor"></div>
                 </div>
-            </div>
-            <div id="actContainer">
-                <input type="text" name="className" id="rootClassName" placeholder="class name" />
-                <input type="button" class="btn btn-success" name="submit" value="변경" id="convert"/>
-                <input type="button" class="btn btn-primary" name="copy" value="copy clipboard" id="copy"/>
             </div>
         </div>
         <textarea id="copyText" style="display:none;"></textarea>
