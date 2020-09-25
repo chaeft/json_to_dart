@@ -19,31 +19,33 @@ Future main() async {
     if (request.method != 'POST' || request.headers.contentType?.mimeType != 'application/json' /*1*/) {
       request.response.write("¯\\_(ツ)_/¯");
       await request.response.close();
-      return;
+      continue;
     }
 
     try {
       String content = await utf8.decoder.bind(request).join();
-      print('content - ${content}');
       var data = jsonDecode(content) as Map;
       if (data['className'] == null || data['className'].length < 1 || data['jsonData'] == null) {
-        request.response.write('{"success": false, "message": "empty parameter"}');
+        request.response.write("¯\\_(ツ)_/¯");
+        //request.response.write('{"success": false, "message": "empty parameter"}');
         await request.response.close();
-        return;
+        continue;
       }
 
       final classGenerator = new ModelGenerator(data['className']);
-      DartCode dartCode = classGenerator.generateDartClasses(JsonEncoder().convert(data['jsonData']));
+      //DartCode dartCode = classGenerator.generateDartClasses(JsonEncoder().convert(data['jsonData']));
+      DartCode dartCode = classGenerator.generateDartClasses(data['jsonData']);
 
       request.response.write(dartCode.code);
       await request.response.close();
     } catch (e) {
       print(e);
-      request.response
-          ..statusCode = HttpStatus.internalServerError
-          ..write('Exception during file I/O: $e.');
+      request.response.write("¯\\_(ツ)_/¯");
+      //request.response
+      //    ..statusCode = HttpStatus.internalServerError
+      //    ..write('Exception during file I/O: $e.');
       await request.response.close();
-      return;
+      continue;
     }
     
   }

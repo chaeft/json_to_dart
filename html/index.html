@@ -8,12 +8,19 @@
             #editorContainer {
                 position: relative;
                 width: 100%;
-                display: inline-block;
+                display: block;
             }
 
             #editorContainer .wrap {
                 width: 500px;
                 height: 500px;
+                float: left;
+                padding-right: 50px;
+            }
+
+            #editorContainer .big-wrap {
+                width: 600px;
+                height: 1000px;
                 float: left;
                 padding-right: 50px;
             }
@@ -36,15 +43,17 @@
                     <div id="editor1" class="editor"></div>
                 </div>
 
-                <div class="wrap">
+                <div class="wrap big-wrap">
                     <div id="editor2" class="editor"></div>
                 </div>
             </div>
             <div id="actContainer">
                 <input type="text" name="className" id="rootClassName" placeholder="class name" />
                 <input type="button" name="submit" value="변경" id="convert"/>
+                <input type="button" name="copy" value="copy clipboard" id="copy"/>
             </div>
         </div>
+        <textarea id="copyText" style="display:none;"></textarea>
     </body>
     <script src="/ace-builds-1.4.12/src-noconflict/ace.js"></script>
     <script>
@@ -61,9 +70,21 @@
     <script>
         const rootClassName = document.getElementById('rootClassName');
         const convert = document.getElementById('convert');
+        const copy = document.getElementById('copy');
+        const copyText = document.getElementById('copyText');
 
         convert.addEventListener('click', function() {
             httpReq();
+        })
+
+        copy.addEventListener('click', function() {
+            var t = document.createElement("textarea");
+            document.body.appendChild(t);
+            t.value = editor2.getValue();
+            t.select();
+            t.setSelectionRange(0, 999999); /*For mobile devices*/
+            document.execCommand('copy');
+            document.body.removeChild(t);
         })
 
         const httpReq = function() {
@@ -77,8 +98,8 @@
                 editor2.setValue(oReq.response);
             }
 
-            oReq.setRequestHeader('Content-Type', 'application/json');
             oReq.open("POST", "/convert");
+            oReq.setRequestHeader('Content-Type', 'application/json');
             oReq.send(JSON.stringify(dataReq));
         }
     </script>
