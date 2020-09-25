@@ -17,3 +17,5 @@ pubspec.lock
 
 # Directory created by dartdoc
 doc/api/
+
+run.log

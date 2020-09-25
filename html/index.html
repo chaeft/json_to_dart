@@ -40,6 +40,10 @@
             #editor2 {
                 font-size: 15px;
             }
+
+            .right {
+                float: right;
+            }
         </style>
     </head>
 
@@ -50,9 +54,9 @@
                     <div id="editor1" class="editor"></div>
 
                     <div id="actContainer">
-                        <input type="text" name="className" id="rootClassName" placeholder="class name" />
-                        <input type="button" class="btn btn-success" name="submit" value="변경" id="convert"/>
-                        <input type="button" class="btn btn-primary" name="copy" value="copy clipboard" id="copy"/>
+                        <input type="text" style="margin-bottom: 10px;" class="form-control" name="className" id="rootClassName" placeholder="class name" />
+                        <input type="button" class="btn btn-success right" style="margin-left: 10px;" name="submit" value="변경" id="convert"/>
+                        <input type="button" class="btn btn-primary right" name="copy" value="copy clipboard" id="copy"/>
                     </div>
                 </div>
 
