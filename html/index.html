@@ -74,12 +74,12 @@
             }
             
             oReq.onload = function(e) {
-                console.log(oReq.response)
-                editor2.setValue(oReq.response)
+                editor2.setValue(oReq.response);
             }
 
+            oReq.setRequestHeader('Content-Type', 'application/json');
             oReq.open("POST", "/convert");
-            oReq.send();
+            oReq.send(JSON.stringify(dataReq));
         }
     </script>
 </html>
